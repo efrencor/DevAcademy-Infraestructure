@@ -55,9 +55,9 @@ Resources:
           Value: DevAcademy-EC2-Lab
       UserData:
         Fn::Base64: !Sub |
-        #!/bin/bash
-        yum -y install awscli || dnf -y install awscli
-        echo "AWS CLI OK" > /root/cli.txt
+          #!/bin/bash
+          yum -y install awscli || dnf -y install awscli
+          echo "AWS CLI OK" > /root/cli.txt
       
 Outputs:
   BucketName:
