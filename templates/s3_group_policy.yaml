@@ -1,16 +1,17 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Bucket + Group + Policy (permiso RW al bucket)
+Description: 'Bucket + Group + Policy (permiso RW al bucket)'
+
 Resources:
   MyBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "lab-${AWS::AccountId}-personal"
- 
+      BucketName: !Sub 'lab-${AWS::AccountId}-personal'
+
   MyGroup:
     Type: AWS::IAM::Group
     Properties:
       GroupName: DevAcademyLabGroup
- 
+
   MyPolicy:
     Type: AWS::IAM::Policy
     DependsOn: MyGroup
@@ -18,7 +19,7 @@ Resources:
       PolicyName: DevAcademyBucketAccess
       Groups: [ !Ref MyGroup ]
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
           - Effect: Allow
             Action:
@@ -32,6 +33,9 @@ Resources:
             Resource:
               - !Sub "arn:aws:s3:::lab-${AWS::AccountId}-personal/*"
 Outputs:
-  BucketName: { Value: !Ref MyBucket }
-  GroupName:  { Value: !Ref MyGroup }
-  PolicyName: { Value: !Ref MyPolicy }
+  BucketName:
+    Value: !Ref MyBucket
+  GroupName:
+    Value: !Ref MyGroup
+  PolicyName:
+    Value: !Ref MyPolicy
