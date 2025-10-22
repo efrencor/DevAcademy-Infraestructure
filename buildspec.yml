@@ -9,7 +9,7 @@ phases:
       - echo "Validando plantillas cloudformation..."
       - aws cloudformation validate-template --template-body file://templates/s3_group_policy.yaml
       - aws cloudformation validate-template --template-body file://templates/ec2_s3_role.yaml
-      - echo "OK: validacion completa"
+      - echo "validacion completa"
 artifacts:
   files:
     - templates/*.yaml
