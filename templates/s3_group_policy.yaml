@@ -5,7 +5,7 @@ Resources:
   MyBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub 'lab-${AWS::AccountId}-personal'
+      BucketName: !Sub 'lab-${AWS::AccountId}-${AWS::Region}-${AWS::StackName}'
 
   MyGroup:
     Type: AWS::IAM::Group
@@ -25,13 +25,13 @@ Resources:
             Action:
               - "s3:ListBucket"
             Resource:
-              - !Sub "arn:aws:s3:::lab-${AWS::AccountId}-personal"
+              - !GetAtt MyBucket.Arn
           - Effect: Allow
             Action:
               - "s3:GetObject"
               - "s3:PutObject"
             Resource:
-              - !Sub "arn:aws:s3:::lab-${AWS::AccountId}-personal/*"
+              - !Sub "${MyBucket.Arn}/*"
 Outputs:
   BucketName:
     Value: !Ref MyBucket
