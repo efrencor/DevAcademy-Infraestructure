@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - echo "Installing utilities..."
+      - apt-get update || yum update -y
+      - apt-get install -y jq || yum install -y jq
+  build:
+    commands:
+      - echo "Validating CloudFormation templates..."
+      - aws cloudformation validate-template --template-body file://templates/s3_group_policy.yaml
+      - aws cloudformation validate-template --template-body file://templates/ec2_s3_role.yaml
+      - echo "OK: Validation complete"
+
+artifacts:
+  files:
+    - templates/*.yaml
