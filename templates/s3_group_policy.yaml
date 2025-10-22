@@ -14,24 +14,25 @@ Resources:
 
   MyPolicy:
     Type: AWS::IAM::Policy
-    DependsOn: MyGroup
+    DependsOn: 
+      - MyGroup
+      - MyBucket
     Properties:
       PolicyName: DevAcademyBucketAccess
-      Groups: [ !Ref MyGroup ]
+      Groups:
+        - !Ref MyGroup
       PolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Action:
-              - "s3:ListBucket"
-            Resource:
-              - !GetAtt MyBucket.Arn
+              - s3:ListBucket
+            Resource: !GetAtt MyBucket.Arn
           - Effect: Allow
             Action:
-              - "s3:GetObject"
-              - "s3:PutObject"
-            Resource:
-              - !Sub "${MyBucket.Arn}/*"
+              - s3:GetObject
+              - s3:PutObject
+            Resource: !Sub "${MyBucket.Arn}/*"
 Outputs:
   BucketName:
     Value: !Ref MyBucket
