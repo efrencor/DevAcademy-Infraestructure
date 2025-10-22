@@ -1,0 +1,10 @@
+# os / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# build artifacts
+dist/
+build/
+*.log

@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Ejercicio con EC2 formacion aws.
+
+Parameters:
+  LatestAmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64
+    Description: "AMI ID más reciente de Amazon Linux 2023 kernel 6.12"
+
+Resources:
+  BucketEC2:
+   Type: AWS::S3::Bucket
+   Properties:
+    BucketName: !Sub "ec2-lab-${AWS::AccountId}-${AWS::Region}"
+  
+  EC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: DevAcademyEC2Role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ES2S3Access
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetObject
+                Resource:
+                  - !GetAtt BucketEC2.Arn
+                  - !Sub "${BucketEC2.Arn}/*"
+              
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+        Roles:
+          - !Ref EC2Role
+          
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: !Ref LatestAmiId
+      IamInstanceProfile: !Ref InstanceProfile
+      Tags:
+        - Key: Name
+          Value: DevAcademy-EC2-Lab
+      UserData:
+        Fn::Base64: !Sub |
+        #!/bin/bash
+        yum -y install awscli || dnf -y install awscli
+        echo "AWS CLI OK" > /root/cli.txt
+      
+Outputs:
+  BucketName:
+    Description: "Nombre del bucket S3 creado"
+    Value: !Ref BucketEC2
+  InstanceId:
+    Description: " Id de la instancia creada"
+    Value: !Ref MyEC2Instance
+  RoleName:
+    Description: " Id del rol IAM asignado"
+    Value: !Ref EC2Role
+  AMIUsed:
+    Description: "AMI ID utilizada para la instancia"
+    Value: !Ref LatestAmiId

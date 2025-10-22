@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Bucket + Group + Policy (permiso RW al bucket)
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "lab-${AWS::AccountId}-personal"
+ 
+  MyGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: DevAcademyLabGroup
+ 
+  MyPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: DevAcademyBucketAccess
+      Groups: [ !Ref MyGroup ]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: [ s3:ListBucket, s3:GetObject, s3:PutObject ]
+            Resource:
+              - !GetAtt MyBucket.Arn
+              - !Sub "${MyBucket.Arn}/*"
+ 
+Outputs:
+  BucketName: { Value: !Ref MyBucket }
+  GroupName:  { Value: !Ref MyGroup }
+  PolicyName: { Value: !Ref MyPolicy }
