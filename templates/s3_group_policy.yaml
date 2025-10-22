@@ -13,6 +13,7 @@ Resources:
  
   MyPolicy:
     Type: AWS::IAM::Policy
+    DependsOn: MyGroup
     Properties:
       PolicyName: DevAcademyBucketAccess
       Groups: [ !Ref MyGroup ]
@@ -22,8 +23,8 @@ Resources:
           - Effect: Allow
             Action: [ s3:ListBucket, s3:GetObject, s3:PutObject ]
             Resource:
-              - !GetAtt MyBucket.Arn
-              - !Sub "${MyBucket.Arn}/*"
+              - !Sub "arn:aws:s3:::lab-${AWS::AccountId}-personal"
+              - !Sub "arn:aws:s3:::lab-${AWS::AccountId}-personal/*"
  
 Outputs:
   BucketName: { Value: !Ref MyBucket }
