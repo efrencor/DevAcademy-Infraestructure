@@ -22,7 +22,7 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
-              - "s3:ListBucket
+              - "s3:ListBucket"
             Resource:
               - !Sub "arn:aws:s3:::lab-${AWS::AccountId}-personal"
           - Effect: Allow
